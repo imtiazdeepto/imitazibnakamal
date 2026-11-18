@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  body {
+    background-color: #0c0c0c;
+    color: #f3f3f3;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', system-ui, sans-serif;
+  }
+}
+
+/* Tomasz Gajda Tactile Embossed Icon Tile */
+.tg-icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #dedede, #c8c8c8);
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.18), -1px -1px 3px rgba(255, 255, 255, 0.7);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a1a1a;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.tg-icon-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 3px 4px 10px rgba(0, 0, 0, 0.25), -1px -1px 4px rgba(255, 255, 255, 0.9);
+  color: #000000;
+  background: linear-gradient(145deg, #e4e4e4, #d0d0d0);
+}
+
+.tg-icon-btn:active {
+  transform: translateY(1px);
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Diagonal split angle for Tomasz Gajda Hero */
+@media (min-width: 1024px) {
+  .hero-slant-bg {
+    clip-path: polygon(0 0, 52% 0, 40% 100%, 0 100%);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0c0c0c;
+}
+::-webkit-scrollbar-thumb {
+  background: #272727;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
