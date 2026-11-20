@@ -8,19 +8,25 @@ import { ResearchPage } from './pages/ResearchPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { ContactPage } from './pages/ContactPage';
 
-// Scroll to top on route change
-function ScrollToTop() {
+function ScrollRestoration() {
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    if (hash) {
-      const element = document.querySelector(hash);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-        return;
-      }
+    // Instant scroll to top first, then handle hash after DOM settles
+    if (!hash) {
+      window.scrollTo(0, 0);
+      return;
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Hash navigation: wait for page to render, then scroll
+    const id = setTimeout(() => {
+      const el = document.getElementById(hash.slice(1));
+      if (el) {
+        const offset = 80; // navbar height
+        const top = el.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    }, 100);
+    return () => clearTimeout(id);
   }, [pathname, hash]);
 
   return null;
@@ -29,7 +35,7 @@ function ScrollToTop() {
 export function App() {
   return (
     <div className="flex flex-col min-h-screen bg-[#0c0c0c] text-white">
-      <ScrollToTop />
+      <ScrollRestoration />
       <Navbar />
       <main className="flex-grow">
         <Routes>

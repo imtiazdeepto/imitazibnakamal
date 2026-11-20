@@ -1,257 +1,241 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Github, ArrowRight, FileText, ChevronRight, CheckCircle2, Cpu, Activity, BookOpen } from 'lucide-react';
+import { Github, ArrowRight, FileText, ArrowUpRight, BookOpen } from 'lucide-react';
 import { profileData } from '../data/profile';
 import { publicationsData } from '../data/publications';
 import { projectsData } from '../data/projects';
 import { Toast } from '../components/Toast';
 
-export const HomePage: React.FC = () => {
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+// Individual stat item — no icons, just clean numbers
+function StatItem({ value, label, sublabel }: { value: string; label: string; sublabel: string }) {
+  return (
+    <div className="border-l border-neutral-800 pl-5 first:border-l-0 first:pl-0">
+      <div className="text-2xl font-extrabold text-white font-display tabular-nums">{value}</div>
+      <div className="text-xs font-semibold text-neutral-200 mt-0.5">{label}</div>
+      <div className="text-xs text-neutral-500 mt-0.5">{sublabel}</div>
+    </div>
+  );
+}
 
-  const handleCopyEmail = (e: React.MouseEvent) => {
-    e.preventDefault();
+export const HomePage: React.FC = () => {
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  const handleCopyEmail = () => {
     navigator.clipboard.writeText(profileData.email);
-    setToastMessage(`Copied ${profileData.email} to clipboard!`);
-    setTimeout(() => setToastMessage(null), 3000);
+    setToastMsg('Email address copied');
+    setTimeout(() => setToastMsg(null), 2500);
   };
 
   return (
     <div className="w-full min-h-screen bg-[#0c0c0c]">
-      
-      {/* ─────────────────────────────────────────────────────────────
-          1. TOMASZ GAJDA SPLIT HERO SECTION
-         ───────────────────────────────────────────────────────────── */}
-      <section className="relative w-full min-h-screen flex flex-col lg:flex-row overflow-hidden pt-20 lg:pt-0">
-        
-        {/* Background diagonal layer for desktop */}
-        <div 
-          className="absolute inset-0 hidden lg:block bg-[#d8d8d8] hero-slant-bg pointer-events-none z-0" 
-          aria-hidden="true" 
+
+      {/* ── HERO ───────────────────────────────────────────────────── */}
+      <section
+        className="relative w-full min-h-screen flex flex-col lg:flex-row overflow-hidden"
+        aria-labelledby="hero-name"
+      >
+        {/* Diagonal background layer — desktop only */}
+        <div
+          className="absolute inset-0 hidden lg:block bg-[#d6d6d6] hero-slant-bg pointer-events-none z-0"
+          aria-hidden="true"
         />
 
-        {/* LEFT PANEL: Light Grey on Desktop */}
-        <div className="w-full lg:w-[48%] relative z-10 flex flex-col justify-center px-8 sm:px-14 lg:pl-20 lg:pr-8 py-16 lg:py-0 bg-[#d8d8d8] lg:bg-transparent text-[#111111]">
-          
-          <div className="max-w-xl">
-            {/* "Hi, I am" */}
-            <p className="text-xl sm:text-2xl font-medium tracking-tight text-[#222222] mb-3">
-              Hi, I am
-            </p>
+        {/* LEFT — text content */}
+        <div className="
+          w-full lg:w-[50%] relative z-10
+          flex flex-col justify-center
+          px-8 sm:px-14 lg:pl-20 lg:pr-10
+          pt-28 pb-16 lg:py-0
+          bg-[#d6d6d6] lg:bg-transparent
+          text-[#111]
+        ">
+          <div className="max-w-lg">
+            <p className="text-base text-[#555] font-medium mb-2">Hi, I am</p>
 
-            {/* Candidate Name */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-black font-display leading-[1.1] mb-3">
+            <h1
+              id="hero-name"
+              className="font-display font-extrabold tracking-tight leading-none text-black"
+              style={{ fontSize: 'clamp(2.4rem, 5vw, 3.75rem)' }}
+            >
               {profileData.name}
             </h1>
 
-            {/* Subtitle / Professional Role */}
-            <h2 className="text-lg sm:text-xl font-medium text-[#5c5c5c] tracking-tight mb-8">
-              {profileData.role}
-            </h2>
+            <p className="mt-3 text-[#4a4a4a] font-medium text-base sm:text-lg">
+              Software Engineer &amp; Medical AI Researcher
+            </p>
 
-            {/* Tomasz Gajda Square Embossed Action Buttons */}
-            <div className="flex items-center gap-4 mb-10">
-              {/* @ Email Icon (Copies email + toast) */}
+            {/* Social tiles */}
+            <div className="flex items-center gap-3 mt-8">
               <button
                 onClick={handleCopyEmail}
-                className="tg-icon-btn group cursor-pointer"
-                aria-label="Copy Email address"
-                title="Copy Email: imtiazibnakamal@gmail.com"
+                className="tg-icon-btn"
+                aria-label="Copy email address"
+                title={profileData.email}
               >
-                <span className="font-bold text-lg leading-none group-hover:scale-110 transition-transform">@</span>
+                <span className="font-bold text-base leading-none select-none">@</span>
               </button>
-
-              {/* GitHub Icon */}
               <a
                 href={profileData.socials.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="tg-icon-btn group"
-                aria-label="GitHub Profile"
-                title="GitHub Profile"
+                className="tg-icon-btn"
+                aria-label="GitHub"
               >
-                <Github size={20} className="group-hover:scale-110 transition-transform" />
+                <Github size={18} strokeWidth={1.8} />
               </a>
-
-              {/* LinkedIn Icon */}
               <a
                 href={profileData.socials.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="tg-icon-btn group"
-                aria-label="LinkedIn Profile"
-                title="LinkedIn Profile"
+                className="tg-icon-btn"
+                aria-label="LinkedIn"
               >
-                <span className="font-bold text-sm tracking-tighter leading-none group-hover:scale-110 transition-transform">in</span>
+                <span className="font-bold text-sm leading-none">in</span>
               </a>
-
-              {/* ResearchGate / Scholar Icon */}
               <a
                 href={profileData.socials.researchgate}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="tg-icon-btn group"
-                aria-label="ResearchGate & Publications"
-                title="Academic Profile"
+                className="tg-icon-btn"
+                aria-label="ResearchGate / Google Scholar"
               >
-                <BookOpen size={18} className="group-hover:scale-110 transition-transform" />
+                <BookOpen size={16} strokeWidth={1.8} />
               </a>
             </div>
 
-            {/* Short Introduction Note */}
-            <p className="text-sm text-[#444444] leading-relaxed max-w-md font-sans mb-8">
-              B.Sc. in Software Engineering (Major in Data Science) at Daffodil International University. 
-              Engineering clinically deployable deep learning systems, explainable diagnostics, and model compression architectures.
+            {/* Bio — one honest sentence, no buzzwords */}
+            <p className="mt-7 text-sm text-[#555] leading-relaxed max-w-sm">
+              B.Sc. Software Engineering (Data Science) at Daffodil International University.
+              Building lightweight diagnostic AI that runs on clinic-grade hardware.
             </p>
 
-            {/* Action CTA Pills */}
-            <div className="flex flex-wrap items-center gap-3">
+            {/* CTAs */}
+            <div className="flex flex-wrap items-center gap-3 mt-8">
               <Link
                 to="/research"
-                className="px-6 py-3 rounded-full bg-black text-white hover:bg-neutral-800 text-xs font-semibold tracking-wider uppercase flex items-center gap-2 transition-all shadow-lg active:scale-95"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-black text-white font-semibold text-sm hover:bg-neutral-800 active:scale-95 transition-all shadow-md"
               >
-                <span>Explore Research</span>
-                <ArrowRight size={14} />
+                View Research
+                <ArrowRight size={15} />
               </Link>
               <a
                 href="/imtiazcv.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-3 rounded-full border border-[#888888] text-black hover:bg-black/5 text-xs font-semibold tracking-wider uppercase flex items-center gap-2 transition-all"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#999] text-[#333] font-semibold text-sm hover:border-black hover:text-black transition-colors"
               >
                 <FileText size={14} />
-                <span>Download CV</span>
+                Download CV
               </a>
             </div>
-
           </div>
         </div>
 
-        {/* RIGHT PANEL: Deep Pitch Black with Portrait */}
-        <div className="w-full lg:w-[52%] relative z-10 flex items-center justify-center lg:justify-end px-6 sm:px-12 lg:pr-24 py-12 lg:py-0 bg-[#0c0c0c]">
-          
-          <div className="relative max-w-md lg:max-w-lg w-full flex justify-center">
-            
-            {/* Ambient Backlight glow */}
-            <div className="absolute inset-0 bg-blue-600/10 blur-3xl rounded-full scale-75 -z-10" />
+        {/* RIGHT — portrait */}
+        <div className="
+          w-full lg:w-[50%] relative z-10
+          flex items-end lg:items-center justify-center lg:justify-end
+          px-6 sm:px-12 lg:pr-20
+          pb-0 pt-10 lg:py-0
+          bg-[#0c0c0c]
+        ">
+          <div className="relative w-full max-w-sm lg:max-w-md">
+            {/* Soft ambient glow */}
+            <div
+              className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#0c0c0c] to-transparent z-10 pointer-events-none"
+              aria-hidden="true"
+            />
+            <img
+              src="/formal.jpeg"
+              alt="Imtiaz Ibna Kamal — Software Engineer and Medical AI Researcher"
+              className="w-full h-auto object-cover object-top rounded-t-2xl lg:rounded-2xl"
+              loading="eager"
+            />
 
-            {/* Portrait Frame with smooth fade into dark background */}
-            <div className="relative overflow-hidden rounded-2xl border border-neutral-800/80 shadow-[0_20px_50px_rgba(0,0,0,0.8)] max-h-[580px]">
-              <img
-                src="/formal.jpeg"
-                alt="Imtiaz Ibna Kamal"
-                className="w-full h-auto object-cover object-top filter brightness-[0.98] contrast-[1.02]"
-              />
-              
-              {/* Subtle bottom gradient vignette */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c0c] via-transparent to-transparent opacity-80" />
-
-              {/* Status Badge Over Image */}
-              <div className="absolute bottom-4 left-4 right-4 bg-[#141414]/90 backdrop-blur-md border border-neutral-700/60 p-3 rounded-xl flex items-center justify-between text-xs">
-                <div>
-                  <span className="text-neutral-400 text-[10px] uppercase font-bold tracking-wider block">Current Focus</span>
-                  <span className="text-white font-medium">Explainable Edge AI in Healthcare</span>
-                </div>
-                <div className="flex items-center gap-1.5 text-emerald-400 font-semibold text-[11px] bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-800/50">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Available for 2026/27</span>
-                </div>
+            {/* Status pill */}
+            <div className="absolute bottom-6 left-4 right-4 z-20 bg-[#141414]/90 backdrop-blur-md border border-neutral-700/60 px-4 py-2.5 rounded-xl flex items-center justify-between">
+              <div>
+                <div className="text-[10px] text-neutral-500 uppercase tracking-wider font-bold">Focus area</div>
+                <div className="text-xs font-semibold text-white mt-0.5">Explainable AI for Healthcare</div>
               </div>
-
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Open to roles
+              </div>
             </div>
-
           </div>
         </div>
-
       </section>
 
-
-      {/* ─────────────────────────────────────────────────────────────
-          2. IMPACT METRICS STRIP (The 30-Second Test from AxelMrak skill)
-         ───────────────────────────────────────────────────────────── */}
-      <section className="w-full border-y border-neutral-900 bg-[#080808] py-10 px-6 lg:px-12">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
-          {profileData.stats.map((stat, idx) => (
-            <div key={idx} className="p-4 rounded-xl bg-neutral-900/40 border border-neutral-800/60 hover:border-neutral-700 transition-all">
-              <span className="text-3xl lg:text-4xl font-extrabold text-white font-display tracking-tight block">
-                {stat.value}
-              </span>
-              <span className="text-xs font-semibold text-neutral-300 uppercase tracking-wider block mt-1">
-                {stat.label}
-              </span>
-              <span className="text-[11px] text-neutral-500 block mt-0.5">
-                {stat.sublabel}
-              </span>
-            </div>
+      {/* ── STATS STRIP ──────────────────────────────────────────────── */}
+      <div className="section-divider" />
+      <section className="bg-[#080808] py-10 px-6 lg:px-12" aria-label="Key numbers">
+        <div className="max-w-4xl mx-auto flex flex-wrap gap-y-8 gap-x-0 justify-between sm:justify-start sm:gap-x-14">
+          {profileData.stats.map((s, i) => (
+            <StatItem key={i} value={s.value} label={s.label} sublabel={s.sublabel} />
           ))}
         </div>
       </section>
+      <div className="section-divider" />
 
-
-      {/* ─────────────────────────────────────────────────────────────
-          3. FEATURED PUBLICATIONS TEASER
-         ───────────────────────────────────────────────────────────── */}
+      {/* ── FEATURED PAPERS ──────────────────────────────────────────── */}
       <section className="py-20 px-6 lg:px-12 max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-blue-400 mb-2">
-              <Activity size={14} />
-              <span>Peer-Reviewed & Preprints</span>
-            </div>
-            <h2 className="text-3xl font-extrabold text-white font-display tracking-tight">
-              Featured Research Publications
-            </h2>
-            <p className="text-neutral-400 text-sm mt-1 max-w-xl">
-              Focusing on clinical explainability, lightweight knowledge distillation, and real-time medical segmentation.
-            </p>
-          </div>
+        <div className="flex items-baseline justify-between mb-10">
+          <h2 className="font-display font-extrabold text-white text-2xl sm:text-3xl">
+            Selected Publications
+          </h2>
           <Link
             to="/research"
-            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-neutral-300 hover:text-white transition-colors group"
+            className="text-sm text-neutral-400 hover:text-white transition-colors flex items-center gap-1"
           >
-            <span>View All 4 Papers & BibTeX</span>
-            <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            All 4 papers
+            <ArrowUpRight size={14} />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {publicationsData.slice(0, 2).map((paper) => (
-            <div
+            <article
               key={paper.id}
-              className="p-6 rounded-2xl bg-[#121212] border border-neutral-800 hover:border-neutral-700 transition-all flex flex-col justify-between group"
+              className="p-6 rounded-2xl bg-[#131313] border border-neutral-800 hover:border-neutral-700 transition-colors flex flex-col justify-between gap-5"
             >
               <div>
-                <div className="flex items-center justify-between gap-3 mb-3">
-                  <span className={`text-[10px] font-bold px-2.5 py-1 rounded-md border uppercase tracking-wider ${paper.badgeColor}`}>
-                    {paper.statusBadge}
+                {/* Status badge + year */}
+                <div className="flex items-center justify-between gap-2 mb-4">
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded border tracking-wider uppercase ${paper.badgeColor}`}>
+                    {paper.status === 'Published' ? 'IEEE Published' : 'Under Review'}
                   </span>
-                  <span className="text-xs text-neutral-500 font-mono">{paper.year}</span>
+                  <span className="text-xs text-neutral-600 tabular-nums">{paper.year}</span>
                 </div>
 
-                <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors leading-snug">
+                <h3 className="text-base font-bold text-white leading-snug">
                   {paper.title}
                 </h3>
 
-                <p className="text-neutral-400 text-xs mt-3 leading-relaxed line-clamp-3">
+                <p className="text-xs text-neutral-400 mt-2 leading-relaxed line-clamp-2">
                   {paper.contribution}
                 </p>
 
-                {/* Key Metrics row */}
+                {/* Metrics — compact inline */}
                 <div className="flex flex-wrap gap-2 mt-4">
-                  {paper.metrics.map((m, i) => (
-                    <span key={i} className="text-[11px] px-2.5 py-1 rounded bg-neutral-900 border border-neutral-800 text-neutral-300 font-medium">
-                      <strong className="text-white">{m.value}</strong> {m.label}
+                  {paper.metrics.slice(0, 3).map((m, i) => (
+                    <span
+                      key={i}
+                      className="text-[11px] px-2 py-0.5 rounded-md bg-neutral-900 border border-neutral-800 text-neutral-300"
+                    >
+                      {m.value}
+                      <span className="text-neutral-500 ml-1">{m.label}</span>
                     </span>
                   ))}
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-neutral-800/80 flex items-center justify-between">
+              <div className="flex items-center justify-between pt-4 border-t border-neutral-800">
                 <Link
                   to="/research"
-                  className="text-xs font-semibold text-neutral-300 hover:text-white flex items-center gap-1"
+                  className="text-xs font-semibold text-neutral-300 hover:text-white flex items-center gap-1 transition-colors"
                 >
-                  <span>Read details & abstract</span>
+                  Abstract + BibTeX
                   <ArrowRight size={12} />
                 </Link>
                 {paper.links.github && (
@@ -259,171 +243,140 @@ export const HomePage: React.FC = () => {
                     href={paper.links.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs text-neutral-400 hover:text-white flex items-center gap-1 font-mono"
+                    className="text-xs text-neutral-500 hover:text-white flex items-center gap-1 transition-colors"
                   >
-                    <Github size={13} />
-                    <span>Code</span>
+                    <Github size={12} />
+                    Code
                   </a>
                 )}
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </section>
 
+      <div className="section-divider" />
 
-      {/* ─────────────────────────────────────────────────────────────
-          4. PRODUCTION SYSTEMS & SOFTWARE ENGINEERING HIGHLIGHT
-         ───────────────────────────────────────────────────────────── */}
-      <section className="py-20 px-6 lg:px-12 bg-[#090909] border-t border-neutral-900">
+      {/* ── FEATURED PROJECTS ────────────────────────────────────────── */}
+      <section className="py-20 px-6 lg:px-12 bg-[#090909]">
         <div className="max-w-7xl mx-auto">
-          
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <div>
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-2">
-                <Cpu size={14} />
-                <span>Full-Stack & Edge Engineering</span>
-              </div>
-              <h2 className="text-3xl font-extrabold text-white font-display tracking-tight">
-                Production Systems & Tooling
-              </h2>
-              <p className="text-neutral-400 text-sm mt-1 max-w-xl">
-                Bridging theoretical computer vision and PyTorch pipelines into containerized FastAPI applications.
-              </p>
-            </div>
+          <div className="flex items-baseline justify-between mb-10">
+            <h2 className="font-display font-extrabold text-white text-2xl sm:text-3xl">
+              Engineering Systems
+            </h2>
             <Link
               to="/projects"
-              className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-neutral-300 hover:text-white transition-colors group"
+              className="text-sm text-neutral-400 hover:text-white transition-colors flex items-center gap-1"
             >
-              <span>Explore All Projects & Skills</span>
-              <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              All projects
+              <ArrowUpRight size={14} />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {projectsData.slice(0, 2).map((proj) => (
-              <div
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {projectsData.filter(p => p.featured).slice(0, 2).map((proj) => (
+              <article
                 key={proj.id}
-                className="p-8 rounded-2xl bg-[#141414] border border-neutral-800 hover:border-neutral-700 transition-all flex flex-col justify-between"
+                className="p-7 rounded-2xl bg-[#131313] border border-neutral-800 hover:border-neutral-700 transition-colors flex flex-col gap-5"
               >
-                <div>
-                  <div className="flex items-center justify-between gap-3 mb-3">
-                    <span className="text-[10px] font-bold tracking-wider uppercase text-neutral-400 bg-neutral-900 px-3 py-1 rounded-full border border-neutral-800">
-                      {proj.category}
+                {/* Category + metric */}
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] text-neutral-500 font-medium uppercase tracking-wider">
+                    {proj.category}
+                  </span>
+                  {proj.metrics && (
+                    <span className="text-xs font-bold text-emerald-400 font-mono">
+                      {proj.metrics.value}
                     </span>
-                    {proj.metrics && (
-                      <span className="text-xs font-bold text-emerald-400 bg-emerald-950/60 px-2.5 py-1 rounded border border-emerald-800/60 font-mono">
-                        {proj.metrics.value}
-                      </span>
-                    )}
-                  </div>
-
-                  <h3 className="text-xl font-extrabold text-white font-display mt-2">
-                    {proj.title}
-                  </h3>
-                  <p className="text-xs font-medium text-neutral-400 mt-1 mb-4">
-                    {proj.subtitle}
-                  </p>
-
-                  <p className="text-sm text-neutral-300 leading-relaxed mb-6">
-                    {proj.description}
-                  </p>
-
-                  <ul className="space-y-2 mb-6">
-                    {proj.highlights.map((h, i) => (
-                      <li key={i} className="text-xs text-neutral-400 flex items-start gap-2">
-                        <CheckCircle2 size={14} className="text-neutral-500 shrink-0 mt-0.5" />
-                        <span>{h}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="flex flex-wrap gap-1.5 mb-6">
-                    {proj.technologies.map((t, i) => (
-                      <span key={i} className="text-[11px] px-2.5 py-1 rounded bg-[#1e1e1e] text-neutral-300 font-mono">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
+                  )}
                 </div>
 
-                <div className="pt-4 border-t border-neutral-800 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    {proj.links.demo && (
-                      <a
-                        href={proj.links.demo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-4 py-2 rounded-lg bg-white text-black font-semibold text-xs hover:bg-neutral-200 transition-colors shadow-sm"
-                      >
-                        Live Demo
-                      </a>
-                    )}
-                    {proj.links.github && (
-                      <a
-                        href={proj.links.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-4 py-2 rounded-lg bg-neutral-900 border border-neutral-800 text-white font-semibold text-xs hover:bg-neutral-800 transition-colors flex items-center gap-1.5 font-mono"
-                      >
-                        <Github size={14} />
-                        <span>Code</span>
-                      </a>
-                    )}
-                  </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white leading-snug">{proj.title}</h3>
+                  <p className="text-xs text-neutral-400 mt-1">{proj.subtitle}</p>
+                </div>
 
+                <p className="text-sm text-neutral-300 leading-relaxed">{proj.description}</p>
+
+                {/* Tech stack */}
+                <div className="flex flex-wrap gap-1.5">
+                  {proj.technologies.slice(0, 6).map((t, i) => (
+                    <span key={i} className="text-[11px] px-2 py-0.5 rounded bg-neutral-900 text-neutral-400 border border-neutral-800 font-mono">
+                      {t}
+                    </span>
+                  ))}
+                  {proj.technologies.length > 6 && (
+                    <span className="text-[11px] px-2 py-0.5 rounded bg-neutral-900 text-neutral-500 border border-neutral-800">
+                      +{proj.technologies.length - 6}
+                    </span>
+                  )}
+                </div>
+
+                {/* Links */}
+                <div className="flex items-center gap-3 pt-3 border-t border-neutral-800 mt-auto">
+                  {proj.links.demo && (
+                    <a
+                      href={proj.links.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 rounded-lg bg-white text-black font-semibold text-xs hover:bg-neutral-200 active:scale-95 transition-all"
+                    >
+                      Live Demo
+                    </a>
+                  )}
+                  {proj.links.github && (
+                    <a
+                      href={proj.links.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-white transition-colors font-mono"
+                    >
+                      <Github size={13} />
+                      Source
+                    </a>
+                  )}
                   <Link
                     to="/projects"
-                    className="text-xs font-semibold text-neutral-300 hover:text-white flex items-center gap-1"
+                    className="ml-auto text-xs text-neutral-500 hover:text-white transition-colors flex items-center gap-1"
                   >
-                    <span>Architecture</span>
-                    <ArrowRight size={12} />
+                    Case study
+                    <ArrowUpRight size={12} />
                   </Link>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
-
         </div>
       </section>
 
-      {/* ─────────────────────────────────────────────────────────────
-          5. CALL TO ACTION BANNER (Converting visitors into opportunities)
-         ───────────────────────────────────────────────────────────── */}
-      <section className="py-20 px-6 lg:px-12 max-w-7xl mx-auto">
-        <div className="rounded-3xl p-8 sm:p-14 bg-gradient-to-r from-[#171717] via-[#121212] to-[#0d0d0d] border border-neutral-800 flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl">
-          <div className="max-w-xl">
-            <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider block mb-2">Let's Connect</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-display tracking-tight leading-tight">
-              Looking for a Software Engineer or Applied ML Researcher?
-            </h2>
-            <p className="text-neutral-400 text-sm mt-3 leading-relaxed">
-              Available for software engineering roles, research collaborations, medical computer vision initiatives, and academic graduate inquiries.
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row items-center gap-4 shrink-0">
-            <Link
-              to="/contact"
-              className="px-8 py-3.5 rounded-full bg-white text-black font-bold text-xs uppercase tracking-wider hover:bg-neutral-200 transition-all shadow-xl active:scale-95"
-            >
-              Get in Touch
-            </Link>
-            <a
-              href="/imtiazcv.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-3.5 rounded-full border border-neutral-700 text-neutral-200 hover:text-white hover:border-neutral-500 font-semibold text-xs uppercase tracking-wider transition-colors flex items-center gap-2"
-            >
-              <FileText size={15} />
-              <span>View Full CV</span>
-            </a>
-          </div>
+      {/* ── CTA ──────────────────────────────────────────────────────── */}
+      <section className="py-20 px-6 lg:px-12 max-w-5xl mx-auto text-center">
+        <h2 className="font-display font-extrabold text-white text-3xl sm:text-4xl max-w-xl mx-auto leading-tight">
+          Open to SWE roles, ML positions, and research collaborations.
+        </h2>
+        <p className="text-neutral-400 text-sm mt-4 max-w-md mx-auto">
+          Graduating July 2027. Actively seeking graduate research opportunities and software engineering positions.
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
+          <Link
+            to="/contact"
+            className="px-8 py-3 rounded-full bg-white text-black font-bold text-sm hover:bg-neutral-100 active:scale-95 transition-all shadow-lg"
+          >
+            Get in touch
+          </Link>
+          <a
+            href="/imtiazcv.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-neutral-700 text-neutral-300 hover:text-white hover:border-neutral-500 font-semibold text-sm transition-colors"
+          >
+            <FileText size={15} />
+            View CV
+          </a>
         </div>
       </section>
 
-      {/* Copy Toast Notification */}
-      <Toast show={!!toastMessage} message={toastMessage || ''} />
-
+      <Toast show={!!toastMsg} message={toastMsg || ''} />
     </div>
   );
 };
