@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { Cpu, Terminal, ExternalLink, Github, CheckCircle2, Layers, Code2, Database, Server, Wrench } from 'lucide-react';
-import { projectsData } from '../data/projects';
+import { Cpu, Terminal, ExternalLink, Github, CheckCircle2, Layers, BookOpen, ArrowRight } from 'lucide-react';
+import { projectsData, Project } from '../data/projects';
 import { skillCategories, competitiveProgramming } from '../data/skills';
+import { CaseStudyModal } from '../components/CaseStudyModal';
+import { InteractiveComparison } from '../components/InteractiveComparison';
 
 export const ProjectsPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [selectedCaseStudy, setSelectedCaseStudy] = useState<Project | null>(null);
 
   const categories = ['all', 'Medical AI & Vision', 'Edge & Algorithms', 'Full-Stack & Systems'];
 
@@ -49,7 +52,7 @@ export const ProjectsPage: React.FC = () => {
         </div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
           {filteredProjects.map((project) => (
             <div
               key={project.id}
@@ -99,34 +102,51 @@ export const ProjectsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-neutral-800 flex items-center gap-3">
-                {project.links.demo && (
-                  <a
-                    href={project.links.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-lg bg-white text-black font-semibold text-xs hover:bg-neutral-200 transition-colors flex items-center gap-1.5 shadow-sm"
+              <div className="pt-4 border-t border-neutral-800 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  {project.links.demo && (
+                    <a
+                      href={project.links.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 rounded-lg bg-white text-black font-semibold text-xs hover:bg-neutral-200 transition-colors flex items-center gap-1.5 shadow-sm"
+                    >
+                      <ExternalLink size={13} />
+                      <span>Live Demo</span>
+                    </a>
+                  )}
+                  {project.links.github && (
+                    <a
+                      href={project.links.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 rounded-lg bg-neutral-900 border border-neutral-800 text-white font-semibold text-xs hover:bg-neutral-800 transition-colors flex items-center gap-1.5 font-mono"
+                    >
+                      <Github size={13} />
+                      <span>Code</span>
+                    </a>
+                  )}
+                </div>
+
+                {/* Interactive Case Study Trigger (AxelMrak Skill) */}
+                {project.caseStudy && (
+                  <button
+                    onClick={() => setSelectedCaseStudy(project)}
+                    className="px-3.5 py-2 rounded-lg bg-blue-950/50 hover:bg-blue-900/50 border border-blue-800/60 text-blue-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition-all group"
                   >
-                    <ExternalLink size={13} />
-                    <span>Live Demo</span>
-                  </a>
-                )}
-                {project.links.github && (
-                  <a
-                    href={project.links.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-lg bg-neutral-900 border border-neutral-800 text-white font-semibold text-xs hover:bg-neutral-800 transition-colors flex items-center gap-1.5 font-mono"
-                  >
-                    <Github size={13} />
-                    <span>View Repository</span>
-                  </a>
+                    <span>View Case Study</span>
+                    <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
+                  </button>
                 )}
               </div>
             </div>
           ))}
         </div>
 
+        {/* ─────────────────────────────────────────────────────────────
+            INTERACTIVE CLINICAL COMPARISON DEMO (AxelMrak Skill)
+           ───────────────────────────────────────────────────────────── */}
+        <InteractiveComparison />
 
         {/* ─────────────────────────────────────────────────────────────
             SKILLS MATRIX SECTION
@@ -175,7 +195,6 @@ export const ProjectsPage: React.FC = () => {
             ))}
           </div>
         </section>
-
 
         {/* ─────────────────────────────────────────────────────────────
             COMPETITIVE PROGRAMMING SECTION
@@ -232,6 +251,14 @@ export const ProjectsPage: React.FC = () => {
         </section>
 
       </div>
+
+      {/* Case Study Modal */}
+      {selectedCaseStudy && (
+        <CaseStudyModal
+          project={selectedCaseStudy}
+          onClose={() => setSelectedCaseStudy(null)}
+        />
+      )}
     </div>
   );
 };
